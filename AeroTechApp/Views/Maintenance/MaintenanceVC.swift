@@ -12,33 +12,13 @@ protocol DeleteItemDelegate: AnyObject {
 }
 //MARK: - Item
 
-struct Item {
-    var name: String
-    var model: String
-    var serialNumber: String
-    var lastInsp: String
-    var upcommingInsp: String
-}
-
-let titleContainer: UIView = {
-    let container = UIView()
-    
-    let text = UILabel()
-    text.text = "Maintenance"
-    text.textColor = .white
-    text.font = .boldSystemFont(ofSize: 28)
-    text.translatesAutoresizingMaskIntoConstraints = false
-    container.addSubview(text)
-    NSLayoutConstraint.activate([
-        text.topAnchor.constraint(equalTo: container.bottomAnchor, constant: -50),
-        text.centerXAnchor.constraint(equalTo: container.centerXAnchor)
-    ])
-    container.backgroundColor = .redTitle
-    container.layer.cornerRadius = 60
-    container.layer.maskedCorners = [.layerMinXMaxYCorner]
-    container.translatesAutoresizingMaskIntoConstraints = false
-    return container
-}()
+//struct Item {
+//    var name: String
+//    var model: String
+//    var serialNumber: String
+//    var lastInsp: String
+//    var upcommingInsp: String
+//}
 let createButton: UIButton = {
     let button = UIButton()
     button.setTitle("Create aircraft", for: .normal)
@@ -96,10 +76,11 @@ let bgView: UIView = {
 class MaintenanceVC: UIViewController, UICollectionViewDelegateFlowLayout, CreateDelegate, EditVCDelegate, DeleteItemDelegate {
     
     var items: [Item] = []
-    
     var collectionView: UICollectionView!
+    
     override func viewDidLoad() {
         view.backgroundColor = .bg
+        titleContainers(view: self.view, name: "Maintenance")
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
 
         let layout = UICollectionViewFlowLayout()
@@ -123,7 +104,7 @@ class MaintenanceVC: UIViewController, UICollectionViewDelegateFlowLayout, Creat
     //MARK: - setSubviews
 
     func setSubviews() {
-        let subviews = [titleContainer, bgView, createButton]
+        let subviews = [bgView, createButton]
         for i in subviews {
             view.addSubview(i)
         }
@@ -132,10 +113,6 @@ class MaintenanceVC: UIViewController, UICollectionViewDelegateFlowLayout, Creat
     func makeConstraints() {
         
         NSLayoutConstraint.activate([
-            titleContainer.topAnchor.constraint(equalTo: view.topAnchor),
-            titleContainer.widthAnchor.constraint(equalToConstant: view.frame.width),
-            titleContainer.heightAnchor.constraint(equalToConstant: 115),
-            
             createButton.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -180),
             createButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             createButton.heightAnchor.constraint(equalToConstant: 55),
@@ -148,7 +125,7 @@ class MaintenanceVC: UIViewController, UICollectionViewDelegateFlowLayout, Creat
             bgView.heightAnchor.constraint(equalToConstant: 130)
         ])
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: titleContainer.bottomAnchor, constant: 20),
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 135),
             collectionView.bottomAnchor.constraint(equalTo: createButton.topAnchor, constant: -20),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15)

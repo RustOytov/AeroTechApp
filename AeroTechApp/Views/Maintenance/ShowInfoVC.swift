@@ -29,6 +29,7 @@ class ShowInfoVC: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
     let deleteButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "trash.fill"), for: .normal)
