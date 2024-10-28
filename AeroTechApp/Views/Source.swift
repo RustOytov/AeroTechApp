@@ -37,7 +37,7 @@ struct Item {
     var lastInsp: String
     var upcommingInsp: String
 }
-//MARK: - Monitoring struct-item
+//MARK: - ItemMonitoring struct-item
 
 struct ItemMonitoring {
     var name: String
@@ -46,6 +46,21 @@ struct ItemMonitoring {
     var temperature: String
     var airPressure: String
     var fuelConsumption: String
+}
+
+//MARK: - ItemFlights struct-item
+
+struct ItemFlights {
+    var name: String
+    var checkDate: String
+}
+
+//MARK: - ItemCheckingFlights struct-item
+
+struct ItemCheckingFlights {
+    var systems: Bool
+    var electronics: Bool
+    var identification: Bool
 }
 //MARK: - setTextFields
 
@@ -139,3 +154,25 @@ func setShowContainer(nameImage: String, contName: String, resultLabel: String, 
     return container
 }
 
+func setFlightsOkButton() -> UIButton {
+    let button = UIButton()
+    button.backgroundColor = .bg
+    button.setTitle("Okey", for: .normal)
+    button.layer.cornerRadius = 20
+    button.layer.borderColor = UIColor.greenBorder.cgColor
+    button.layer.borderWidth = 2
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.alpha = 0.4
+    return button
+}
+func setFlightsViolatedButton() -> UIButton {
+    let button = UIButton()
+    button.backgroundColor = .bg
+    button.setTitle("Violated", for: .normal)
+    button.layer.cornerRadius = 20
+    button.layer.borderColor = UIColor.redButton.cgColor
+    button.layer.borderWidth = 2
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.alpha = 0.4
+    return button
+}

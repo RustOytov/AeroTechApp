@@ -124,6 +124,9 @@ class CreateAircraftVC: UIViewController {
     var selectedLastInspStr: String = ""
     var selectedUpcomInsp: Date?
     var selectedUpcomInspStr: String = ""
+    
+    //MARK: - viewDidLoad
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .bg
