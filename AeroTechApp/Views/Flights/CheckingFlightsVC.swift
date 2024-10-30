@@ -1,9 +1,20 @@
 import UIKit
 
+protocol CheckingFlightsVCDelegate: AnyObject  {
+    func addCheckingFlights(with name: String, date: String, system: Bool, electronic: Bool, identification: Bool, notes: String)
+}
+protocol AddAnalyticsDelegate: AnyObject {
+    func AddAnalytics(with name: String, date: String, system: Bool, electronic: Bool, identification: Bool, notes: String)
+}
 class CheckingFlightsVC: UIViewController {
     
     var dateVer: String?
     var name: String?
+    var indexPathItem: IndexPath?
+//    var item: ItemFlights?
+    weak var delegate: CheckingFlightsVCDelegate?
+    weak var anDelegate: AddAnalyticsDelegate?
+    weak var deleteDelegate: DeleteFlightsItemDelegate?
     
     let nameView: UILabel = {
         let label = UILabel()
@@ -46,7 +57,7 @@ class CheckingFlightsVC: UIViewController {
     
     var systemOkButton = setFlightsOkButton()
     var systemViolatedButton = setFlightsViolatedButton()
-    var systemResult: Bool?
+    var systemResult: Bool = false
     
     //MARK: - electronics
     let electronicsLabel: UILabel = {
@@ -60,7 +71,7 @@ class CheckingFlightsVC: UIViewController {
     
     var electronicsOkButton = setFlightsOkButton()
     var electronicsViolatedButton = setFlightsViolatedButton()
-    var electronicsResult: Bool?
+    var electronicsResult: Bool = false
     
     //MARK: - identification
     let identificationLabel: UILabel = {
@@ -74,7 +85,7 @@ class CheckingFlightsVC: UIViewController {
     
     var identificationOkButton = setFlightsOkButton()
     var identificationViolatedButton = setFlightsViolatedButton()
-    var identificationResult: Bool?
+    var identificationResult: Bool = false
     
     //MARK: - texfield
     let notesField = setEditTextFields(placeholdertext: "Notes", value: "")
@@ -224,8 +235,15 @@ class CheckingFlightsVC: UIViewController {
         identificationViolatedButton.alpha = 1
         identificationOkButton.alpha = 0.4
     }
-    
     @objc private func makeButtonTapped() {
+        delegate?.addCheckingFlights(with: name!, date: dateVer!,
+                                     system: systemResult, electronic: electronicsResult,
+                                     identification: identificationResult, notes: notesField.text!)
+        
+        anDelegate?.AddAnalytics(with: name!, date: dateVer!,
+                                 system: systemResult, electronic: electronicsResult,
+                                 identification: identificationResult, notes: notesField.text!)
+        deleteDelegate?.didDeleteFlightItem(at: self.indexPathItem!)
         dismiss(animated: true, completion: nil)
     }
 }

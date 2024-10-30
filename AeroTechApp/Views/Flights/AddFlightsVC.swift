@@ -1,7 +1,8 @@
-import UIKit
 protocol AddFlightsVCDelegate: AnyObject {
     func addFlights(with name: String, checkDate: String)
 }
+import UIKit
+
 class AddFlightsVC: UIViewController {
     
     let nameView: UILabel = {

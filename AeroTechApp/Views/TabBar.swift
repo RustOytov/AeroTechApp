@@ -29,6 +29,7 @@ class TabBar: UITabBarController {
         tabBar.layer.maskedCorners = [.layerMaxXMinYCorner]
         
         viewControllers = [maintenance, monitoring, flights, analytics, settings]
+        flights.analyticsDelegate = analytics
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

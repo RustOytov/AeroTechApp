@@ -1,8 +1,11 @@
 import UIKit
 
+protocol DeleteFlightsItemDelegate: AnyObject {
+    func didDeleteFlightItem(at index: IndexPath)
+}
 //MARK: - FlightsVC
 
-class FlightsVC: UIViewController, AddFlightsVCDelegate, UICollectionViewDelegateFlowLayout {
+class FlightsVC: UIViewController, AddFlightsVCDelegate, UICollectionViewDelegateFlowLayout, CheckingFlightsVCDelegate, DeleteFlightsItemDelegate {
     
     //MARK: - bgView
     
@@ -59,7 +62,9 @@ class FlightsVC: UIViewController, AddFlightsVCDelegate, UICollectionViewDelegat
         button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         return button
     }()
+    weak var analyticsDelegate: AddAnalyticsDelegate?
     var itemsFlights: [ItemFlights] = []
+    var allItemsFlights: [AllItemsFlights] = []
     var collectionView: UICollectionView!
     //MARK: - viewDidLoad
     override func viewDidLoad() {
@@ -119,6 +124,17 @@ class FlightsVC: UIViewController, AddFlightsVCDelegate, UICollectionViewDelegat
         }
         collectionView.reloadData()
     }
+    func addCheckingFlights(with name: String, date: String, system: Bool, electronic: Bool, identification: Bool, notes: String) {
+        allItemsFlights.append(AllItemsFlights(name: name, date: date, system: system, electronic: electronic, identification: identification, notes: notes))
+    }
+    func didDeleteFlightItem(at index: IndexPath) {
+        itemsFlights.remove(at: index.row)
+        collectionView.deleteItems(at: [index])
+        collectionView.reloadData()
+        if itemsFlights.isEmpty {
+            bgView.isHidden = false
+        }
+    }
     
     //MARK: - addButtonTapped
 
@@ -141,12 +157,16 @@ extension FlightsVC: UICollectionViewDataSource, UICollectionViewDelegate {
         cell.nameLabel.text = itemsFlights[indexPath.row].name
         cell.secondDateLabel.text = "Check before \(itemsFlights[indexPath.row].checkDate)"
         cell.parentViewController = self
-            
             cell.buttonAction = {
                 let checking = CheckingFlightsVC()
                 let navController = UINavigationController(rootViewController: checking)
+                checking.delegate = self
+                checking.anDelegate = self.analyticsDelegate
+                checking.deleteDelegate = self
+                checking.indexPathItem = indexPath
                 checking.name = self.itemsFlights[indexPath.row].name
                 checking.dateVer = self.itemsFlights[indexPath.row].checkDate
+//                checking.item = self.itemsFlights[indexPath.row]
                 cell.parentViewController?.present(navController, animated: true, completion: nil)
             }
         return cell
