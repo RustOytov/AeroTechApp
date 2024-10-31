@@ -50,10 +50,10 @@ struct ItemMonitoring {
 
 //MARK: - ItemFlights struct-item
 
-struct ItemFlights {
-    var name: String
-    var checkDate: String
-}
+//struct ItemFlights {
+//    var name: String
+//    var checkDate: String
+//}
 
 //MARK: - ItemCheckingFlights struct-item
 
@@ -266,14 +266,14 @@ func setContainerSettings(nameImage: String, textLabel: String) -> UIView {
     ])
     return container
 }
-
-let namePlane: UILabel = {
-    let label = UILabel()
-    label.textColor = .white
-    label.font = .boldSystemFont(ofSize: 18)
-    label.translatesAutoresizingMaskIntoConstraints = false
-    return label
-}()
+//
+//let namePlane: UILabel = {
+//    let label = UILabel()
+//    label.textColor = .white
+//    label.font = .boldSystemFont(ofSize: 18)
+//    label.translatesAutoresizingMaskIntoConstraints = false
+//    return label
+//}()
 //MARK: - setFlightsOkButton
 
 func setFlightsOkButton() -> UIButton {

@@ -81,6 +81,8 @@ class AddMonParVC: UIViewController {
         view.backgroundColor = .bg
         setSubviews()
         makeConstraints()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+            view.addGestureRecognizer(tapGesture)
     }
     //MARK: - setSubviews
     
@@ -143,6 +145,13 @@ class AddMonParVC: UIViewController {
             addButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
+    @objc func dismissKeyboard() {
+        nameTextField.resignFirstResponder()
+        weightTextField.resignFirstResponder()
+        temperatureTextField.resignFirstResponder()
+        airPressureTextField.resignFirstResponder()
+        fuelConsumptionTextField.resignFirstResponder()
+        }
     //MARK: - tappedButtons
     @objc private func okButtonTapped() {
         balanceResult = true

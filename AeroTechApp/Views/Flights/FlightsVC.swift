@@ -1,11 +1,7 @@
 import UIKit
-
-protocol DeleteFlightsItemDelegate: AnyObject {
-    func didDeleteFlightItem(at index: IndexPath)
-}
 //MARK: - FlightsVC
 
-class FlightsVC: UIViewController, AddFlightsVCDelegate, UICollectionViewDelegateFlowLayout, CheckingFlightsVCDelegate, DeleteFlightsItemDelegate {
+class FlightsVC: UIViewController, AddFlightsVCDelegate, UICollectionViewDelegateFlowLayout, DeleteCheckingFlightsVCDelegate {/*DeleteFlightsItemDelegate*/
     
     //MARK: - bgView
     
@@ -63,7 +59,6 @@ class FlightsVC: UIViewController, AddFlightsVCDelegate, UICollectionViewDelegat
         return button
     }()
     weak var analyticsDelegate: AddAnalyticsDelegate?
-    var itemsFlights: [ItemFlights] = []
     var allItemsFlights: [AllItemsFlights] = []
     var collectionView: UICollectionView!
     //MARK: - viewDidLoad
@@ -84,7 +79,7 @@ class FlightsVC: UIViewController, AddFlightsVCDelegate, UICollectionViewDelegat
         view.addSubview(collectionView)
         setSubviews()
         makeConstraints()
-        if !itemsFlights.isEmpty {
+        if !allItemsFlights.isEmpty {
             bgView.isHidden = true
         } else { bgView.isHidden = false }
     }
@@ -116,22 +111,21 @@ class FlightsVC: UIViewController, AddFlightsVCDelegate, UICollectionViewDelegat
         ])
     }
     //MARK: - addFlights
-    
-    func addFlights(with name: String, checkDate: String) {
-        itemsFlights.append(ItemFlights(name: name, checkDate: checkDate))
-        if !itemsFlights.isEmpty {
+
+    func addFlights(with name: String, date: String, system: Bool, electronic: Bool, identification: Bool, notes: String) {
+        allItemsFlights.append(AllItemsFlights(name: name, date: date, system: system, electronic: electronic, identification: identification, notes: notes))
+        if !allItemsFlights.isEmpty {
             bgView.isHidden = true
         }
         collectionView.reloadData()
     }
-    func addCheckingFlights(with name: String, date: String, system: Bool, electronic: Bool, identification: Bool, notes: String) {
-        allItemsFlights.append(AllItemsFlights(name: name, date: date, system: system, electronic: electronic, identification: identification, notes: notes))
-    }
-    func didDeleteFlightItem(at index: IndexPath) {
-        itemsFlights.remove(at: index.row)
-        collectionView.deleteItems(at: [index])
+    //MARK: - didDeleteCheckingFlights
+
+    func didDeleteCheckingFlights(with name: String, date: String, system: Bool, electronic: Bool, identification: Bool, notes: String, indexForDelete: IndexPath) {
+        allItemsFlights.remove(at: indexForDelete.row)
+        collectionView.deleteItems(at: [indexForDelete])
         collectionView.reloadData()
-        if itemsFlights.isEmpty {
+        if allItemsFlights.isEmpty {
             bgView.isHidden = false
         }
     }
@@ -149,26 +143,23 @@ class FlightsVC: UIViewController, AddFlightsVCDelegate, UICollectionViewDelegat
 
 extension FlightsVC: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return itemsFlights.count
+        return allItemsFlights.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FlightsCell", for: indexPath) as! FlightsCell
-        cell.nameLabel.text = itemsFlights[indexPath.row].name
-        cell.secondDateLabel.text = "Check before \(itemsFlights[indexPath.row].checkDate)"
+        cell.nameLabel.text = allItemsFlights[indexPath.row].name
+        cell.secondDateLabel.text = "Check before \(allItemsFlights[indexPath.row].date)"
         cell.parentViewController = self
-            cell.buttonAction = {
-                let checking = CheckingFlightsVC()
-                let navController = UINavigationController(rootViewController: checking)
-                checking.delegate = self
-                checking.anDelegate = self.analyticsDelegate
-                checking.deleteDelegate = self
-                checking.indexPathItem = indexPath
-                checking.name = self.itemsFlights[indexPath.row].name
-                checking.dateVer = self.itemsFlights[indexPath.row].checkDate
-//                checking.item = self.itemsFlights[indexPath.row]
-                cell.parentViewController?.present(navController, animated: true, completion: nil)
-            }
+        cell.buttonAction = {
+            let checking = CheckingFlightsVC()
+            let navController = UINavigationController(rootViewController: checking)
+            checking.delegate = self
+            checking.anDelegate = self.analyticsDelegate
+            checking.indexPathItem = indexPath
+            checking.item = self.allItemsFlights[indexPath.row]
+            cell.parentViewController?.present(navController, animated: true, completion: nil)
+        }
         return cell
     }
     

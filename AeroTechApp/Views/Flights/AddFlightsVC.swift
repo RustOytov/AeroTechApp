@@ -1,5 +1,5 @@
 protocol AddFlightsVCDelegate: AnyObject {
-    func addFlights(with name: String, checkDate: String)
+    func addFlights(with name: String, date: String, system: Bool, electronic: Bool, identification: Bool, notes: String)
 }
 import UIKit
 
@@ -100,7 +100,7 @@ class AddFlightsVC: UIViewController {
         selectedCheckDataStr = dateFormatter.string(from: selectedCheckData!)
     }
     @objc private func addButtonTapped() {
-        delegate?.addFlights(with: nameTextField.text!, checkDate: selectedCheckDataStr)
+        delegate?.addFlights(with: nameTextField.text!, date: selectedCheckDataStr, system: false, electronic: false, identification: false, notes: "")
         dismiss(animated: true, completion: nil)
     }
 }

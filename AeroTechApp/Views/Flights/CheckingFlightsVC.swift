@@ -1,20 +1,17 @@
 import UIKit
 
-protocol CheckingFlightsVCDelegate: AnyObject  {
-    func addCheckingFlights(with name: String, date: String, system: Bool, electronic: Bool, identification: Bool, notes: String)
+protocol DeleteCheckingFlightsVCDelegate: AnyObject  {
+    func didDeleteCheckingFlights(with name: String, date: String, system: Bool, electronic: Bool, identification: Bool, notes: String, indexForDelete: IndexPath)
 }
 protocol AddAnalyticsDelegate: AnyObject {
     func AddAnalytics(with name: String, date: String, system: Bool, electronic: Bool, identification: Bool, notes: String)
 }
 class CheckingFlightsVC: UIViewController {
     
-    var dateVer: String?
-    var name: String?
+    var item: AllItemsFlights?
     var indexPathItem: IndexPath?
-//    var item: ItemFlights?
-    weak var delegate: CheckingFlightsVCDelegate?
+    weak var delegate: DeleteCheckingFlightsVCDelegate?
     weak var anDelegate: AddAnalyticsDelegate?
-    weak var deleteDelegate: DeleteFlightsItemDelegate?
     
     let nameView: UILabel = {
         let label = UILabel()
@@ -107,8 +104,8 @@ class CheckingFlightsVC: UIViewController {
         view.backgroundColor = .bg
         setSibviews()
         makeConstraints()
-        self.nameView.text = self.name
-        self.dateContainer.text = " \(self.dateVer!)"
+        nameView.text = item?.name
+        dateContainer.text = item?.date
         
         systemOkButton.addTarget(self, action: #selector(systemOkButtonTapped), for: .touchUpInside)
         systemViolatedButton.addTarget(self, action: #selector(systemViolatedButtonTapped), for: .touchUpInside)
@@ -120,6 +117,9 @@ class CheckingFlightsVC: UIViewController {
         identificationViolatedButton.addTarget(self, action: #selector(identificationViolatedButtonTapped), for: .touchUpInside)
         
         notesField.layer.borderColor = UIColor.grayBorder.cgColor
+//        print(indexPathItem!)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+            view.addGestureRecognizer(tapGesture)
     }
     
     //MARK: - setSibviews
@@ -235,15 +235,20 @@ class CheckingFlightsVC: UIViewController {
         identificationViolatedButton.alpha = 1
         identificationOkButton.alpha = 0.4
     }
+    
+    //for hide keyboard
+    @objc func dismissKeyboard() {
+        notesField.resignFirstResponder()
+        }
+    
     @objc private func makeButtonTapped() {
-        delegate?.addCheckingFlights(with: name!, date: dateVer!,
+        delegate?.didDeleteCheckingFlights(with: item!.name, date: item!.date,
                                      system: systemResult, electronic: electronicsResult,
-                                     identification: identificationResult, notes: notesField.text!)
+                                     identification: identificationResult, notes: notesField.text!, indexForDelete: indexPathItem!)
         
-        anDelegate?.AddAnalytics(with: name!, date: dateVer!,
+        anDelegate?.AddAnalytics(with: item!.name, date: item!.date,
                                  system: systemResult, electronic: electronicsResult,
                                  identification: identificationResult, notes: notesField.text!)
-        deleteDelegate?.didDeleteFlightItem(at: self.indexPathItem!)
         dismiss(animated: true, completion: nil)
     }
 }
